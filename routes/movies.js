@@ -1,6 +1,12 @@
 const express = require('express');
 const MoviesService = require('../services/movies');
 
+//IMPORTACION DE SCHEMAS
+const {movieIdSchema, createMovieSchema, updateMovieSchema} = require('../utils/schemas/movies');
+//IMPORTACION DE VALIDATIONHANDLER
+const validationHandler = require('../utils/middleware/validationHandler');
+
+
 function moviesApi(app){
     const router = express.Router();
     //la ruta de inicio de este router usara el api/movie
@@ -21,12 +27,17 @@ function moviesApi(app){
                 message: 'Listado de peliculas'
             })
         } catch (err) {
+            //AQUI PASAMOS EL ERROR AL MIDDLEWARE DE ERRORES QUE CREAMOS O BIEN AL QUE TENGA POR DEFECTO EXPRESS
             next(err)
         }
     });
     
-    //ruta para obtener una pelicula de acuerdo al ID
-    router.get('/:movieId',async function(req,res,next){
+    /*
+        Ruta para obtener una pelicula de acuerdo al ID
+        Al aplicar validacion con JOI pasamos como 2do parametros el handler de validacion
+        y especificamos que sacaremos el movieId de los parametros del request
+    */
+    router.get('/:movieId',validationHandler({movieId:movieIdSchema},'params'),async function(req,res,next){
         //en este caso usamos PARAMS porque lo definimos como parametro en la URL
         const {movieId} = req.params;
         //USAMOS TRY/CATCH PORQUE ES CODIGO ASINCRONO
@@ -42,8 +53,12 @@ function moviesApi(app){
         }
     });
 
-    //rutara para crear una pelicula
-    router.post('/',async function(req,res,next){
+    /*
+        ruta para crear una pelicula
+        Agregamos la validacion en el segundo parametro(middleware), no es necesario especificar de donde obtener el eschema
+        Lo toma por defecto del body
+    */
+    router.post('/',validationHandler(createMovieSchema),async function(req,res,next){
         // OBTENEMOS EL CUERPO DE LA REQUEST QUE ES ENVIADO COMO JSON
         // Y LE PONES UN ALIAS : movie
         const { body: movie } = req;
@@ -61,7 +76,7 @@ function moviesApi(app){
     });
 
     //ruta para actualizar o crear una pelicula si no existe la ID
-    router.put('/:movieId',async function(req,res,next){
+    router.put('/:movieId',validationHandler({movieId:movieIdSchema},'params'),validationHandler(updateMovieSchema),async function(req,res,next){
         const {movieId} = req.params;
         const { body: movie } = req;
 
@@ -79,7 +94,7 @@ function moviesApi(app){
     });
 
     //ruta para eliminar un pelicula de acuerdo a un ID
-    router.delete('/:movieId',async function(req,res,next){
+    router.delete('/:movieId',validationHandler({movieId:movieIdSchema},'params'),async function(req,res,next){
         const {movieId} = req.params;
 
         //USAMOS TRY/CATCH PORQUE ES CODIGO ASINCRONO
