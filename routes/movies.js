@@ -6,6 +6,8 @@ const {movieIdSchema, createMovieSchema, updateMovieSchema} = require('../utils/
 //IMPORTACION DE VALIDATIONHANDLER
 const validationHandler = require('../utils/middleware/validationHandler');
 
+const cacheResponse = require('../utils/cacheResponse');
+const {FIVE_MINUTES_IN_SECONDS, SIXTY_MINUTES_IN_SECONDS} = require('../utils/times');
 
 function moviesApi(app){
     const router = express.Router();
@@ -15,6 +17,8 @@ function moviesApi(app){
     //CREO UNA INSTANCIA DEL SERVICIO DE PELICULA
     const moviesService = new MoviesService();
     router.get('/',async function(req,res,next){
+        //LE PASO EL CONTROL DE CACHE
+        cacheResponse(res, FIVE_MINUTES_IN_SECONDS);
         //obtenemos los tags desde QUERY porque son parametros pasados por
         //el formato ?param1=...&param2=....
         const { tags } = req.query;
@@ -38,6 +42,8 @@ function moviesApi(app){
         y especificamos que sacaremos el movieId de los parametros del request
     */
     router.get('/:movieId',validationHandler({movieId:movieIdSchema},'params'),async function(req,res,next){
+        //LE PASO EL CONTROL DE CACHE
+        cacheResponse(res, SIXTY_MINUTES_IN_SECONDS);
         //en este caso usamos PARAMS porque lo definimos como parametro en la URL
         const {movieId} = req.params;
         //USAMOS TRY/CATCH PORQUE ES CODIGO ASINCRONO
