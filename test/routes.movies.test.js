@@ -4,7 +4,7 @@ const assert = require('assert');
 const proxyquire = require('proxyquire'); 
 
 //importamos los mocks para las pruebas
-const { moviesMock, filterdMoviesMocks, MoviesServiceMook } = require('../utils/mocks/movies.js');
+const { moviesMock, filteredMoviesMocks, MoviesServiceMook } = require('../utils/mocks/movies.js');
 //importamos el servidor de testing
 const testServer = require('../utils/testServer');
 
@@ -92,7 +92,7 @@ describe('router - movies',function(){
         });
 
         it('should respond with the detail of movie', function(done){
-            request.put('/api/movies/e6f2b3141a494c998a941968',data).end((err,res)=>{
+            request.put('/api/movies/e6f2b3141a494c998a941968').end((err,res)=>{
                 assert.deepStrictEqual(res.body,{
                     data: moviesMock[0].id,
                     message: 'Pelicula modificada'

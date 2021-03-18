@@ -12,7 +12,7 @@ const moviesMock = [{"id":"e6f2b3141a494c998a941968","title":"Drum, The (Drums)"
 /*
     Metodo para filtrar los mocks por medio de un tag, se usar para test
 */
-function filterdMoviesMocks(tag){
+function filteredMoviesMocks(tag){
     return moviesMock.filter(movie => movie.tags.includes(tag));
 }
 
@@ -46,6 +46,6 @@ class MoviesServiceMook{
 
 module.exports = {
     moviesMock,
-    filterdMoviesMocks,
+    filteredMoviesMocks,
     MoviesServiceMook
 };

@@ -40,7 +40,6 @@ class MoviesService {
     async deleteMovie({movieId}){
         const deletedMovieId = await this.mongoDb.delete(this.collection,movieId);
         //RETORNA EL ID DE LA PELICULA ELIMINADA
-        console.log("Id Eliminiada:",deletedMovieId);
         return deletedMovieId;
     }
 }
