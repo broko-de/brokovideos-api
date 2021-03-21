@@ -3,7 +3,11 @@ const express = require('express');
 const app = express();
 
 const { config } = require('./config/index');
+
+const authApi = require('./routes/auth');
 const moviesApi = require('./routes/movies.js');
+const userMoviesApi = require('./routes/userMovies.js');
+
 //MIDDLEWARES
 const { logErrors, errorHandler, wrapErrors } = require('./utils/middleware/errorHandlers.js');
 const notFoundHandler  = require('./utils/middleware/notFoundHandler');
@@ -17,7 +21,9 @@ app.get('/',(req,res)=>{
 });
 
 //llamamos a nuestro router de peliculas - MIDDLEARE DE RUTAS
+authApi(app);
 moviesApi(app);
+userMoviesApi(app);
 //captura del error 404
 app.use(notFoundHandler)
 
