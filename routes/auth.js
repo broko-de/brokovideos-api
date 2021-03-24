@@ -4,6 +4,11 @@ const boom = require('@hapi/boom');
 const jwt = require('jsonwebtoken');
 
 const ApiKeysService = require('../services/apiKeys');
+//PARA LA CREACION DE USUARIOS
+const UsersService = require('../services/users');
+const validationHandler = require('../utils/middleware/validationHandler');
+const { createUserSchema } = require('../utils/schemas/users');
+
 
 const { config } = require('../config');
 
@@ -17,6 +22,8 @@ function authApi(app){
 
     //instanciamos el servicio de APIKEY
     const apiKeysService = new ApiKeysService();
+
+    const usersServices = new UsersService();
 
     //RUTA ENVIO DE FORMULARIO LOGIN
     router.post('/sign-in',async function(req,res,next){
@@ -80,6 +87,23 @@ function authApi(app){
                 next(error)
             }
         })(req,res,next); //con este clousure nos aseguramos que nuestra authenticate custom callback funcione sin problemas
+    });
+
+    //Agregamos RUTA DE SIGN-UP
+    router.post('/sign-up',validationHandler(createUserSchema),async function(req,res,next){
+        //Extraigo del request el body con el nombre de user
+        const {body:user} = req;
+
+        try {
+            const createdUserId = await usersServices.createUser({user});
+
+            res.status(201).json({
+                data:createdUserId,
+                message: 'El usuario fue creado correctamente'
+            });
+        } catch (error) {
+            next(error);
+        }
     });
 }
 
