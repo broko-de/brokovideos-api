@@ -11,6 +11,7 @@ const userMoviesApi = require('./routes/userMovies.js');
 //MIDDLEWARES
 const { logErrors, errorHandler, wrapErrors } = require('./utils/middleware/errorHandlers.js');
 const notFoundHandler  = require('./utils/middleware/notFoundHandler');
+const { protectRoutes } = require('./utils/middleware/protectRoutes');
 
 //Body parse
 //NOS PERMITE CUANDO ENVIAMOS DE DATOS JSON LOS PUEDA INTERPRETAR
@@ -26,6 +27,8 @@ moviesApi(app);
 userMoviesApi(app);
 //captura del error 404
 app.use(notFoundHandler)
+//Middle para proteger rutas
+app.use(protectRoutes)
 
 //MIDDLEWARES DE ERRORES TIENE QUE IR LUEGO DE LAS RUTAS
 app.use(logErrors);
