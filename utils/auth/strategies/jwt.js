@@ -14,7 +14,7 @@ passport.use(
     //esta estrategia recibe como parametros para su constructor el secretOrKey y de donde sacamos el JWT
     new Strategy({
         secretOrKey: config.authJwtSecret,
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() //lo extraemos del header cuando hagamos una peticion
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() //lo extraemos del header cuando hagamos una peticion como un bearer token
     },
     //La estrategia tambien recibe un callback donde contiene el payload del token ya decodificado
     // y otro callback donde se define si encontramos el usuario o si debemos devolver un error

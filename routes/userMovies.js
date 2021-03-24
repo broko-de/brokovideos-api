@@ -43,7 +43,7 @@ function userMovieApi(app) {
         }
     })
 
-    router.delete('/:userMovieId',validationHandler({userMovieId: userMovieIdSchema},'params'),await function(req,res,next){
+    router.delete('/:userMovieId',validationHandler({userMovieId: userMovieIdSchema},'params'),async function(req,res,next){
         //Sacamos el userMoviesId de los parametros de la ruta
         const { userMovieId } = req.params;
         try {

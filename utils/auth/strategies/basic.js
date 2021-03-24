@@ -9,7 +9,7 @@ const boom = require('@hapi/boom');
 const bcrypt = require('bcrypt');
 
 //Importamos el servicio del usuario para acceder a sus metodos
-const UserService = require('../../../services/users');
+const UsersService = require('../../../services/users');
 
 /*
     Implementamos la estrategia por medio de BasicStrategy definiendo una funcino callback que recibe como parametros:
@@ -19,10 +19,11 @@ const UserService = require('../../../services/users');
 */
 passport.use(new BasicStrategy(
     async function(email,password, callback){
-        const userService = new UserService();
+        const userService = new UsersService();
         try {
             //buscamos al usuario por el email
-            const user = userService.getUser({email});
+            const user = await userService.getUser({email});
+
             //verificamos si el usuario existe o no
             if(!user){
                 //retornamos un error de unauthorized con un false
