@@ -6,10 +6,13 @@ const MoviesService = require('../services/movies');
 const {movieIdSchema, createMovieSchema, updateMovieSchema} = require('../utils/schemas/movies');
 //IMPORTACION DE VALIDATIONHANDLER
 const validationHandler = require('../utils/middleware/validationHandler');
+//IMPORTACION DE MIDDLEWARE DE PROTECCION DE RUTAS
+const { protectRoutes } = require('../utils/middleware/protectRoutes');
+//IMPORTACION DE MIDDLEWARE PARA COMPROBAR SCOPES
+const scopesValidationHanlder = require('../utils/middleware/scopesValidationHandler');
 
 const cacheResponse = require('../utils/cacheResponse');
 const {FIVE_MINUTES_IN_SECONDS, SIXTY_MINUTES_IN_SECONDS} = require('../utils/times');
-const { protectRoutes } = require('../utils/middleware/protectRoutes');
 
 // PARA PROTEGER LAS RUTAS IMPORTAMOS LA ESTRATEGIA - SIN MIDDLEWARE
 //require('../utils/auth/strategies/jwt');
@@ -26,6 +29,8 @@ function moviesApi(app){
         //passport.authenticate('jwt',{session:false}),
         //Opcion con middleware creado
         protectRoutes,
+        //Comprobamos los permisos de scope pasandole como parametro el que deberia tener
+        scopesValidationHanlder(['read:movies']),
         async function(req,res,next){
             //LE PASO EL CONTROL DE CACHE
             cacheResponse(res, FIVE_MINUTES_IN_SECONDS);
@@ -54,6 +59,7 @@ function moviesApi(app){
     */
     router.get('/:movieId',
         protectRoutes,        
+        scopesValidationHanlder(['read:movies']),
         validationHandler({movieId:movieIdSchema},'params'),
         async function(req,res,next){
             //LE PASO EL CONTROL DE CACHE
@@ -81,6 +87,7 @@ function moviesApi(app){
     */
     router.post('/',
         protectRoutes,
+        scopesValidationHanlder(['create:movies']),
         validationHandler(createMovieSchema),
         async function(req,res,next){
             // OBTENEMOS EL CUERPO DE LA REQUEST QUE ES ENVIADO COMO JSON
@@ -103,6 +110,7 @@ function moviesApi(app){
     //ruta para actualizar o crear una pelicula si no existe la ID
     router.put('/:movieId',
         protectRoutes,
+        scopesValidationHanlder(['update:movies']),
         validationHandler({movieId:movieIdSchema},'params'),
         validationHandler(updateMovieSchema),
         async function(req,res,next){
@@ -126,6 +134,7 @@ function moviesApi(app){
     //ruta para eliminar un pelicula de acuerdo a un ID
     router.delete('/:movieId',
         protectRoutes,
+        scopesValidationHanlder(['delete:movies']),
         validationHandler({movieId:movieIdSchema},'params'),
         async function(req,res,next){
             const {movieId} = req.params;

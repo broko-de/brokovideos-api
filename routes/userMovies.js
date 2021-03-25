@@ -2,6 +2,8 @@ const express = require('express');
 
 const UserMoviesService = require('../services/userMovies');
 const validationHandler = require('../utils/middleware/validationHandler');
+//IMPORTACION DE MIDDLEWARE PARA COMPROBAR SCOPES
+const scopesValidationHanlder = require('../utils/middleware/scopesValidationHandler');
 
 const { movieIdSchema } = require('../utils/schemas/movies');
 const { userIdSchema } = require('../utils/schemas/users');
@@ -19,6 +21,7 @@ function userMovieApi(app) {
 
     router.get('/',
         protectRoutes,
+        scopesValidationHanlder(['read:user-movies']),
         validationHandler({userId:userIdSchema},'query'), 
         async function(req,res,next){
             const {userId} = req.query;
@@ -36,6 +39,7 @@ function userMovieApi(app) {
 
     router.post('/',
         protectRoutes,
+        scopesValidationHanlder(['write:user-movies']),
         validationHandler(createUserMovieSchema),
         async function(req,res,next){
             const {body:userMovie} = req;
@@ -55,6 +59,7 @@ function userMovieApi(app) {
 
     router.delete('/:userMovieId',
         protectRoutes,
+        scopesValidationHanlder(['delete:user-movies']),
         validationHandler({userMovieId: userMovieIdSchema},'params'),
         async function(req,res,next){
             //Sacamos el userMoviesId de los parametros de la ruta

@@ -30,7 +30,7 @@ passport.use(
             //si existe borramos el atributo password del usuario para devolverlo
             delete user.password;
             //retornamos en la callback el error nulo y devolvemos el usuario y un atributo scope que viene del token que se firmo anterioremente
-            callback(null,{...user, scope: tokenPayload.scope});
+            callback(null,{...user, scopes: tokenPayload.scopes});
 
         } catch (error) {
             callback(error);
