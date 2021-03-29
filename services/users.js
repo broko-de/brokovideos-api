@@ -40,6 +40,23 @@ class UsersService{
         const deletedUserId = await this.mongoLib.delete(this.collection,userId);
         return deletedUserId;
     }
+
+    /*
+        Metodo para obtener un usuario si existe o crearlo  y devolver el usuario creado
+    */
+    async getOrCreateUser({user}){
+        //Consulto si hay un usuario con el mismo email
+        const querieUser = await this.getUser({email: user.email});
+
+        //si existe lo devuelvo
+        if (querieUser){
+            return querieUser;
+        }
+        //si no existe lo creo
+        await this.createUser({user});
+        //retorno el usuario creado
+        return await this.getUser({email:user.email});
+    }
 }
 
 module.exports = UsersService;
