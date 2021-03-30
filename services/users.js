@@ -46,11 +46,11 @@ class UsersService{
     */
     async getOrCreateUser({user}){
         //Consulto si hay un usuario con el mismo email
-        const querieUser = await this.getUser({email: user.email});
+        const queriedUser = await this.getUser({email: user.email});
 
         //si existe lo devuelvo
-        if (querieUser){
-            return querieUser;
+        if (queriedUser){
+            return queriedUser;
         }
         //si no existe lo creo
         await this.createUser({user});

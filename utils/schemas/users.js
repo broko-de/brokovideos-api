@@ -15,7 +15,8 @@ const createUserSchema = {
 }
 
 const createProviderUserSchema = {
-    ...userSchema
+    ...userSchema,
+    apiKeyToken: joi.string().required()
 }
 
 const updateUserSchema = {
@@ -28,5 +29,6 @@ const updateUserSchema = {
 module.exports = {
     userIdSchema,
     createUserSchema,
-    updateUserSchema
+    updateUserSchema,
+    createProviderUserSchema
 };
