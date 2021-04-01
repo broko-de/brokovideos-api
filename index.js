@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -16,6 +17,8 @@ const { protectRoutes } = require('./utils/middleware/protectRoutes');
 //Body parse
 //NOS PERMITE CUANDO ENVIAMOS DE DATOS JSON LOS PUEDA INTERPRETAR
 app.use(express.json());
+//HACE USO DE LA CONFIGURACION POR DEFECTO DE HELMET, SI LO QUEREMOS PERSONALIZAR DEBEMOS SETEARLE LA CONFIGURACION
+app.use(helmet());
 
 app.get('/',(req,res)=>{
     res.send("Bienvenidos al API REST de peliculas de brokode");
